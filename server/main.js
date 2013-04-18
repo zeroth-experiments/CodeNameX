@@ -22,12 +22,8 @@
  * ============================================================ */
 
 // It's a http server
-var http = require("http");
+var server = new require('./server').Server();
 
-var server = http.createServer( function( req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end("It works!");
-});
 
-server.listen(8080);
-console.log("Server is listing on port 8080");
+
+
