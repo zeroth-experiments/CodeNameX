@@ -21,28 +21,77 @@
  *
  * ============================================================ */
 
+/**
+How to use
+var srever = requier("./server")
+var app = server(); // creates the server which listen on port 8080
+app.on("event", function(query,request, response){
+    //Do something
+});
+*/
+
 // It's a http server
 var http = require('http'),
     util = require('util'),
     eventEmitter = require('events').EventEmitter,
     URL = require('url');
 
+function merge(a, b){
+  if (a && b) {
+    for (var key in b) {
+      a[key] = b[key];
+    }
+  }
+  return a;
+};
 
-//TODO Inherit eventEmiter and emit some events 
-//util.inherits(Server, eventEmitter);
+//Class Server
+var Server = function(){}
+//Inherit eventEmiter and emit some events 
+util.inherits(Server, eventEmitter);
+// Server class object to be expose 
+var server = new Server();
+// Expose Server Function 
+exports = module.exports = function () {
+    var httpServer = http.createServer();
+    httpServer.on("request", httpRequestReceive);
+    httpServer.listen(8080);
+
+    merge(server, httpServer);
+    return server;
+};
+
 
 /*
   Calling this function directly wont give the the POST data
 */
-var processRequest = function(request, response) {
-    var parsedUrl = URL.parse(request.url);
+function processRequest(request, response) {
+    var parsedUrl = URL.parse(request.url, true);
     
-    response.writeHead(200, {'Content-Type': 'text/plain' });
-    response.end("<h1>It Works!</h1>" + util.inspect(parsedUrl));
+    //take a data from URL
+    var pathName = parsedUrl['pathname']
+    var query = parsedUrl['query'];
+    
+    // create a data to send for event
+    var pathSplit = pathName.split("/");
+    var moduleName = "";
+    var subModule = "";
+    if(pathSplit.length >= 2) {
+        moduleName = pathSplit[1];
+        if(pathSplit.length >2) {
+            subModule = pathSplit[3]
+        }
+    }
+    query["subModule"] = subModule;
+    server.emit(moduleName, query, request, response);
+
+    // Test Server
+    //response.writeHead(200, {'Content-Type': 'text/plain' });
+    //response.end("<h1>It Works!</h1>" + util.inspect(parsedUrl));
 };
 
 
-var httpRequestReceive = function(request, response) {
+function httpRequestReceive(request, response) {
     request.data = "";
     request.reading = false;
     request.readyRead = false;
@@ -50,7 +99,8 @@ var httpRequestReceive = function(request, response) {
     // If there is data from POST method keep it with request object in properly called data (custom property)
     request.on("data", function(data) {
 	// It can be bigger then expected,
-	// have to find put the correct way to do this
+	// have to find out the correct way to do this
+        // Or may be this is good!
 	request.data += data;
 	request.reading = true;
     });
@@ -62,13 +112,3 @@ var httpRequestReceive = function(request, response) {
 
     processRequest(request, response);
 };
-
-
-exports.Server = function () {
-    var httpServer = http.createServer();
-    httpServer.on("request", httpRequestReceive);
-    httpServer.listen(8080);
-    return httpServer;
-}
-
-

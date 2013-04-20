@@ -22,8 +22,14 @@
  * ============================================================ */
 
 // It's a http server
-var server = new require('./server').Server();
+var server = new require('./server'),
+    util = require('util');
 
+var app = server();
 
+app.on("hi", function(query, req, res){
+    res.writeHead(200, {'Content-Type': 'text/plain' });
+    res.end("You Have send : \n" + util.inspect(query));
+});
 
 
