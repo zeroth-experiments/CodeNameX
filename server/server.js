@@ -36,6 +36,9 @@ var http = require('http'),
     eventEmitter = require('events').EventEmitter,
     URL = require('url');
 
+var eventDirectory=[];
+
+// Helping function copied from connect module 
 function merge(a, b){
   if (a && b) {
     for (var key in b) {
@@ -47,24 +50,26 @@ function merge(a, b){
 
 //Class Server
 var Server = function(){}
+
 //Inherit eventEmiter and emit some events 
 util.inherits(Server, eventEmitter);
+
 // Server class object to be expose 
 var server = new Server();
+
 // Expose Server Function 
 exports = module.exports = function () {
     var httpServer = http.createServer();
     httpServer.on("request", httpRequestReceive);
     httpServer.listen(8080);
 
-    merge(server, httpServer);
+//    merge(server, httpServer);
     return server;
 };
 
 
-/*
-  Calling this function directly wont give the the POST data
-*/
+
+//  Calling this function directly wont give the the POST data
 function processRequest(request, response) {
     var parsedUrl = URL.parse(request.url, true);
     
@@ -83,11 +88,14 @@ function processRequest(request, response) {
         }
     }
     query["subModule"] = subModule;
-    server.emit(moduleName, query, request, response);
+    
+    if(!isEventExist(moduleName)) {
+	response.writeHead(200, {'Content-Type': 'text/plain' });
+	response.end("404 Page not found ! \n Module \"" + moduleName + "\" does not exist!");
+    }
 
-    // Test Server
-    //response.writeHead(200, {'Content-Type': 'text/plain' });
-    //response.end("<h1>It Works!</h1>" + util.inspect(parsedUrl));
+    server.emit(moduleName, query, request, response);
+    
 };
 
 
@@ -112,3 +120,22 @@ function httpRequestReceive(request, response) {
 
     processRequest(request, response);
 };
+
+
+// Event manager
+function isEventExist(event) {
+    if(eventDirectory.indexOf(event) == -1) {
+	return false;
+    }
+    return true;
+}
+
+server.on("newListener", function(event, listner) {
+    if(!isEventExist(event))
+	eventDirectory.push(event);
+});
+
+server.on("removeListener", function(event, listner){
+    if(isEventExist(event))
+	eventDirectory.splice(eventDirectory.indexOf(event), 1);
+});
