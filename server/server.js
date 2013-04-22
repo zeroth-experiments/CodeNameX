@@ -90,7 +90,7 @@ function processRequest(request, response) {
     query["subModule"] = subModule;
     
     if(!isEventExist(moduleName)) {
-	response.writeHead(200, {'Content-Type': 'text/plain' });
+	response.writeHead(404, {'Content-Type': 'text/plain' });
 	response.end("404 Page not found ! \n Module \"" + moduleName + "\" does not exist!");
     }
 
