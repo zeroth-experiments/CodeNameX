@@ -93,32 +93,29 @@ function processRequest(request, response) {
 	response.writeHead(404, {'Content-Type': 'text/plain' });
 	response.end("404 Page not found ! \n Module \"" + moduleName + "\" does not exist!");
     }
-
-    server.emit(moduleName, query, request, response);
+    else {
+	server.emit(moduleName, query, request, response);
+    }
     
 };
 
 
 function httpRequestReceive(request, response) {
     request.data = "";
-    request.reading = false;
-    request.readyRead = false;
-
+    
     // If there is data from POST method keep it with request object in properly called data (custom property)
     request.on("data", function(data) {
 	// It can be bigger then expected,
 	// have to find out the correct way to do this
         // Or may be this is good!
 	request.data += data;
-	request.reading = true;
     });
     
     request.on("end", function(){
-	request.isReadyRead = true;
-	request.reading = false;
+	processRequest(request, response);
     });
 
-    processRequest(request, response);
+    
 };
 
 

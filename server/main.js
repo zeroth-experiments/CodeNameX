@@ -27,9 +27,26 @@ var server = new require('./server'),
 
 var app = server();
 
-app.on("hi", function(query, req, res){
+app.on("", function(query, req, res){
+    res.writeHead(200, {'Content-Type': 'text/html' });
+    res.end("<h1>Welcome to CodeNameX!</h1>");
+});
+////////////////////////////////////////////////////////////////////////////////
+app.on("Auth", function(query, req, res) {
+    if(req.method != "POST") {
+	res.writeHead(405, {'Content-Type': 'text/plain' });
+	res.end("This function is accessible only with POST method!");
+    }
+    else {
+	res.writeHead(200, {'Content-Type': 'text/plain' });
+	res.end("{'ok':true}");
+    }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+app.on("test", function(query, req, res){
     res.writeHead(200, {'Content-Type': 'text/plain' });
-    res.end("You Have send : \n" + util.inspect(query));
+    res.end("You Have send : \n" + util.inspect(query) + "  \n data : " + req.data);
 });
 
 
