@@ -47,8 +47,5 @@ function sendRequest(reqPack, res){
 
     client.end();
 }
-function main() {
-    if( process.argv.length
-//postTest();
-//getTest();
-}
+
+postTest();

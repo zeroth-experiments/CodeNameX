@@ -23,30 +23,51 @@
 
 // It's a http server
 var server = require('./server'),
-    util = require('util');
+      util = require('util'),
+      http = require('http');
 
-var app = server(8080);
+var dbHostname = "127.0.0.1";
+var dbPort = 5984;
+
+// global req packets
+var requestPacket = {
+    hostname : dbHostname,
+    port : dbPort,
+    path: '',
+    method: ''
+};
+
+var app = server(8888);
 
 app.on("", function(query, req, res){
     res.writeHead(200, {'Content-Type': 'text/html' });
     res.end("<h1>Welcome to CodeNameX!</h1>");
 });
-////////////////////////////////////////////////////////////////////////////////
-app.on("Auth", function(query, req, res) {
-    if(req.method != "POST") {
-	res.writeHead(405, {'Content-Type': 'text/plain' });
-	res.end("This function is accessible only with POST method!");
-    }
-    else {
-	res.writeHead(200, {'Content-Type': 'text/plain' });
-	res.end("{'ok':true}");
-    }
+
+
+app.on("showall", function(query, req, res){
+    requestPacket.path = "/_all_dbs";
+    requestPacket.method = "GET";
+    sendRequest(requestPacket, res);
 });
 
-////////////////////////////////////////////////////////////////////////////////
-app.on("test", function(query, req, res){
-    res.writeHead(200, {'Content-Type': 'text/plain' });
-    res.end("You Have send : \n" + util.inspect(query) + "  \n data : " + req.data);
+app.on("createdb", function(query, req, res) {
+    var dbname = query['dbname'];
+    requestPacket.path = "/"+dbname;
+    requestPacket.method = "PUT";
+    sendRequest(requestPacket, res);
 });
 
+app.on("deletedb", function(query, req, res) {
+    var dbname = query['dbname'];
+    requestPacket.path = "/"+dbname;
+    requestPacket.method = "DELETE";
+    sendRequest(requestPacket, res);
+});
 
+app.on("info", function(query, req, res) {
+    var dbname = query['dbname'];
+    requestPacket.path = "/"+dbname;
+    requestPacket.method = "GET";
+    sendRequest(requestPacket, res);
+});

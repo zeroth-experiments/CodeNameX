@@ -58,10 +58,10 @@ util.inherits(Server, eventEmitter);
 var server = new Server();
 
 // Expose Server Function 
-exports = module.exports = function () {
+exports = module.exports = function ( port ) {
     var httpServer = http.createServer();
     httpServer.on("request", httpRequestReceive);
-    httpServer.listen(8080);
+    httpServer.listen(port);
 
 //    merge(server, httpServer);
     return server;
@@ -136,3 +136,4 @@ server.on("removeListener", function(event, listner){
     if(isEventExist(event))
 	eventDirectory.splice(eventDirectory.indexOf(event), 1);
 });
+
