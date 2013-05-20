@@ -71,3 +71,31 @@ app.on("info", function(query, req, res) {
     requestPacket.method = "GET";
     sendRequest(requestPacket, res);
 });
+
+app.on("add", function(query, req, res) {
+    var dbname = query['dbname'];
+    requestPacket.path = "/"+dbname;
+    requestPacket.method = "POST";
+    sendRequest(requestPacket, req.data);
+});
+
+
+function sendRequest(reqPack, data){
+    var client = http.request(reqPack, function(response){
+	response.data = "";
+	response.on("data", function(chunk){
+	    response.data += chunk;
+	});
+
+	response.on("end", function(){
+	    console.log("Test Packet :\n\t " + util.inspect(reqPack) + "\n");
+	    console.log("Test Response : \n\t" +response.data + "\n");
+	});
+    });
+
+    if(res != "" && reqPack['method'] == "POST")
+	client.write(res);
+
+    client.end();
+}
+
