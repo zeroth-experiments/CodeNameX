@@ -22,10 +22,10 @@
  * ============================================================ */
 
 // It's a http server
-var server = new require('./server'),
+var server = require('./server'),
     util = require('util');
 
-var app = server();
+var app = server(8080);
 
 app.on("", function(query, req, res){
     res.writeHead(200, {'Content-Type': 'text/html' });
