@@ -48,39 +48,41 @@ app.on("", function(query, req, res){
 app.on("showall", function(query, req, res){
     requestPacket.path = "/_all_dbs";
     requestPacket.method = "GET";
-    sendRequest(requestPacket, res);
+    sendRequest(requestPacket, req.data, res);
 });
 
 app.on("createdb", function(query, req, res) {
-    var dbname = query['dbname'];
+    var data = query['_data'];
+    var dq = JSON.parse(data)
+    var dbname = dq['dbname'];
     requestPacket.path = "/"+dbname;
     requestPacket.method = "PUT";
-    sendRequest(requestPacket, res);
+    sendRequest(requestPacket, req.data, res);
 });
 
 app.on("deletedb", function(query, req, res) {
     var dbname = query['dbname'];
     requestPacket.path = "/"+dbname;
     requestPacket.method = "DELETE";
-    sendRequest(requestPacket, res);
+    sendRequest(requestPacket, req.data, res);
 });
 
 app.on("info", function(query, req, res) {
     var dbname = query['dbname'];
     requestPacket.path = "/"+dbname;
     requestPacket.method = "GET";
-    sendRequest(requestPacket, res);
+    sendRequest(requestPacket, req.data, res);
 });
 
 app.on("add", function(query, req, res) {
     var dbname = query['dbname'];
     requestPacket.path = "/"+dbname;
     requestPacket.method = "POST";
-    sendRequest(requestPacket, req.data);
+    sendRequest(requestPacket, req.data, res);
 });
 
 
-function sendRequest(reqPack, data){
+function sendRequest(reqPack, data, res){
     var client = http.request(reqPack, function(response){
 	response.data = "";
 	response.on("data", function(chunk){
@@ -90,11 +92,12 @@ function sendRequest(reqPack, data){
 	response.on("end", function(){
 	    console.log("Test Packet :\n\t " + util.inspect(reqPack) + "\n");
 	    console.log("Test Response : \n\t" +response.data + "\n");
+            res.end(response.data);
 	});
     });
 
-    if(res != "" && reqPack['method'] == "POST")
-	client.write(res);
+    if(data != "" && reqPack['method'] == "POST")
+	client.write(data);
 
     client.end();
 }
