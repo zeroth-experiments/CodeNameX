@@ -10,7 +10,7 @@ Auth: (use the user key to get an application key for a particular session)
 
 
 Database:
-  http://redis.io/
+    couchdb
 
 Language:
   Node Js.
