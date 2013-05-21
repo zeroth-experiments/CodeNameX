@@ -31,6 +31,7 @@ app.on("", function(query, req, res){
     res.writeHead(200, {'Content-Type': 'text/html' });
     res.end("<h1>Welcome to CodeNameX!</h1>");
 });
+
 ////////////////////////////////////////////////////////////////////////////////
 app.on("Auth", function(query, req, res) {
     if(req.method != "POST") {
@@ -40,6 +41,7 @@ app.on("Auth", function(query, req, res) {
     else {
 	res.writeHead(200, {'Content-Type': 'text/plain' });
 	res.end("{'ok':true}");
+        console.dir(query);
     }
 });
 
@@ -48,5 +50,3 @@ app.on("test", function(query, req, res){
     res.writeHead(200, {'Content-Type': 'text/plain' });
     res.end("You Have send : \n" + util.inspect(query) + "  \n data : " + req.data);
 });
-
-
