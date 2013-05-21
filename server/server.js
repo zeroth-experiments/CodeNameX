@@ -61,6 +61,11 @@ var server = new Server();
 exports = module.exports = function ( port ) {
     var httpServer = http.createServer();
     httpServer.on("request", httpRequestReceive);
+
+    httpServer.on("error", function(error) {
+        console.log("Http server " + error);
+    });
+
     httpServer.listen(port);
 
     // merge(server, httpServer);
@@ -139,5 +144,5 @@ server.on("removeListener", function(event, listner) {
 });
 
 server.on("error", function(error) {
-    
+    console.log("Server Error " + error);
 });
