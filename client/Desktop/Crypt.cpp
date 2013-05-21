@@ -4,7 +4,7 @@
  * http://thezeroth.net
  *
  * Date        : 20-05-2013
- * Description : Client Authentication App/User.
+ * Description : Cryptography functions.
  *
  * Copyright (C) 2013      by Abhishek patil <abhishek@thezeroth.net>
  *
