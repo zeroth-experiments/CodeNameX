@@ -20,7 +20,7 @@ function postTest() {
     console.log("/Auth POST Test!");
     requestPacket.path = "/Auth";
     requestPacket.method = "POST";
-    var postData = "{ 'appkey':'', 'CLID':'', 'clientname':'testclient' }";
+    var postData = '{ "appkey":"", "CLID":"", "clientname":"testclient" }';
     sendRequest(requestPacket, postData, function(statusCode){
         if(statusCode == 200)
             console.log("Test OK");

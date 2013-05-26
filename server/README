@@ -1,1 +1,3 @@
 Server!
+All errors should be generated with Http status code
+please follow http://en.wikipedia.org/wiki/List_of_HTTP_status_codes

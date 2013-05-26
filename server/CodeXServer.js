@@ -23,7 +23,8 @@
 
 // It's a http server
 var server = require('./server'),
-    util = require('util');
+    util = require('util'),
+    uuid = require('node-uuid');
 
 var app = server(8080);
 
@@ -36,12 +37,53 @@ app.on("", function(query, req, res){
 app.on("Auth", function(query, req, res) {
     if(req.method != "POST") {
 	res.writeHead(405, {'Content-Type': 'text/plain' });
-	res.end("This function is accessible only with POST method!");
+	res.end('{"error":"This function is accessible only with POST method!"}');
     }
     else {
-	res.writeHead(200, {'Content-Type': 'text/plain' });
-	res.end("{'ok':true}");
-        console.dir(query);
+	
+        //console.dir(query);
+        // Parse the query
+        var data = query['_data'];
+        var appreq = JSON.parse(data);
+        var appkey, clid, clientname = "";
+        // Check if client name is provided if its empty reply bad request 
+        if(appreq.clientname) {
+            clientname = appreq.clientname;
+        }
+        else {
+            console.log("clientname name not found!");
+            res.writeHead(400, {'Content-Type': 'text/plain' });
+	    res.end('{"error":"client name should not be empty!"}');
+            return;
+        }
+
+        // If App key check with couch db for validation
+        if(appreq.appkey) {
+            console.log("Appkey : " +  appreq.appkey);
+            appkey = appreq.appkey;
+        }
+        else {
+            // Generate appkey
+            appkey = uuid.v4();
+        }
+        
+        if(appreq.CLID) {
+            console.log("CLID : " +  appreq.CLID);
+            clid = appreq.CLID;
+        }
+        else {
+            clid = uuid.v4();
+        }
+        
+
+
+        res.writeHead(200, {'Content-Type': 'text/plain' });
+	res.end(data);
+        // if the query is null
+          // make a challange action process
+        // else
+           // make a request to couchdb
+           // reply of couch db will go back to Auth request
     }
 });
 
