@@ -72,8 +72,6 @@ exports = module.exports = function ( port ) {
     return server;
 };
 
-
-
 //  Calling this function directly wont give the the POST data
 function processRequest(request, response) {
     var parsedUrl = URL.parse(request.url, true);
@@ -96,29 +94,28 @@ function processRequest(request, response) {
     query["_subModule"] = subModule;
     query["_data"] = request.data;
     if(!isEventExist(moduleName)) {
-	    response.writeHead(404, {'Content-Type': 'text/plain' });
-	    response.end("404 Page not found ! \n Module \"" + moduleName + "\" does not exist!");
+        response.writeHead(404, {'Content-Type': 'text/plain' });
+        response.end("404 Page not found ! \n Module \"" + moduleName + "\" does not exist!");
     }
     else {
-	    server.emit(moduleName, query, request, response);
+        server.emit(moduleName, query, request, response);
     }
     
 };
-
 
 function httpRequestReceive(request, response) {
     request.data = "";
     
     // If there is data from POST method keep it with request object in properly called data (custom property)
     request.on("data", function(data) {
-	    // It can be bigger then expected,
-	    // have to find out the correct way to do this
+        // It can be bigger then expected,
+        // have to find out the correct way to do this
         // Or may be this is good!
-	    request.data += data;
+        request.data += data;
     });
     
     request.on("end", function(){
-	    processRequest(request, response);
+        processRequest(request, response);
     });
 
     
@@ -128,21 +125,23 @@ function httpRequestReceive(request, response) {
 // Event manager
 function isEventExist(event) {
     if(eventDirectory.indexOf(event) == -1) {
-	    return false;
+        return false;
     }
     return true;
 }
 
 server.on("newListener", function(event, listner) {
     if(!isEventExist(event))
-	    eventDirectory.push(event);
+        eventDirectory.push(event);
 });
 
 server.on("removeListener", function(event, listner) {
     if(isEventExist(event))
-	    eventDirectory.splice(eventDirectory.indexOf(event), 1);
+        eventDirectory.splice(eventDirectory.indexOf(event), 1);
 });
 
 server.on("error", function(error) {
     console.log("Server Error " + error);
 });
+
+

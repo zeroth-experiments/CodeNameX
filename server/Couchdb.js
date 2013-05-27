@@ -44,7 +44,6 @@ app.on("", function(query, req, res){
     res.end("<h1>Welcome to CodeNameX!</h1>");
 });
 
-
 app.on("showall", function(query, req, res){
     requestPacket.path = "/_all_dbs";
     requestPacket.method = "GET";
@@ -84,20 +83,20 @@ app.on("add", function(query, req, res) {
 
 function sendRequest(reqPack, data, res){
     var client = http.request(reqPack, function(response){
-	response.data = "";
-	response.on("data", function(chunk){
-	    response.data += chunk;
-	});
+        response.data = "";
+        response.on("data", function(chunk){
+        response.data += chunk;
+    });
 
-	response.on("end", function(){
-	    console.log("Test Packet :\n\t " + util.inspect(reqPack) + "\n");
-	    console.log("Test Response : \n\t" +response.data + "\n");
-            res.end(response.data);
-	});
+        response.on("end", function(){
+        console.log("Test Packet :\n\t " + util.inspect(reqPack) + "\n");
+        console.log("Test Response : \n\t" +response.data + "\n");
+        res.end(response.data);
+    });
     });
 
     if(data != "" && reqPack['method'] == "POST")
-	client.write(data);
+        client.write(data);
 
     client.end();
 }

@@ -36,11 +36,10 @@ app.on("", function(query, req, res){
 ////////////////////////////////////////////////////////////////////////////////
 app.on("Auth", function(query, req, res) {
     if(req.method != "POST") {
-	res.writeHead(405, {'Content-Type': 'text/plain' });
-	res.end('{"error":"This function is accessible only with POST method!"}');
+        res.writeHead(405, {'Content-Type': 'text/plain' });
+        res.end('{"error":"This function is accessible only with POST method!"}');
     }
     else {
-	
         //console.dir(query);
         // Parse the query
         var data = query['_data'];
@@ -53,7 +52,7 @@ app.on("Auth", function(query, req, res) {
         else {
             console.log("clientname name not found!");
             res.writeHead(400, {'Content-Type': 'text/plain' });
-	    res.end('{"error":"client name should not be empty!"}');
+            res.end('{"error":"client name should not be empty!"}');
             return;
         }
 
@@ -75,15 +74,13 @@ app.on("Auth", function(query, req, res) {
             clid = uuid.v4();
         }
         
-
-
         res.writeHead(200, {'Content-Type': 'text/plain' });
-	res.end(data);
+        res.end(data);
         // if the query is null
           // make a challange action process
         // else
-           // make a request to couchdb
-           // reply of couch db will go back to Auth request
+          // make a request to couchdb
+          // reply of couch db will go back to Auth request
     }
 });
 
@@ -92,3 +89,4 @@ app.on("test", function(query, req, res){
     res.writeHead(200, {'Content-Type': 'text/plain' });
     res.end("You Have send : \n" + util.inspect(query) + "  \n data : " + req.data);
 });
+
