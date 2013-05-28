@@ -53,7 +53,7 @@ app.on("showall", function(query, req, res){
 app.on("createdb", function(query, req, res) {
     var data = query['_data'];
     var dq = JSON.parse(data)
-    var dbname = dq['dbname'];
+    var dbname = query['dbname'];
     requestPacket.path = "/"+dbname;
     requestPacket.method = "PUT";
     sendRequest(requestPacket, req.data, res);

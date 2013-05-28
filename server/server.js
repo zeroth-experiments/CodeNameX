@@ -79,7 +79,7 @@ function processRequest(request, response) {
     //take a data from URL
     var pathName = parsedUrl['pathname']
     var query = parsedUrl['query'];
-    
+
     // create a data to send for event
     var pathSplit = pathName.split("/");
     var moduleName = "";

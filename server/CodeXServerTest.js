@@ -18,7 +18,7 @@ var requestPacket = {
 function postTest() {
     // POST test
     console.log("/Auth POST Test!");
-    requestPacket.path = "/Auth";
+    requestPacket.path = "/Auth?db=user";
     requestPacket.method = "POST";
     var postData = '{ "appkey":"", "CLID":"", "clientname":"testclient" }';
     sendRequest(requestPacket, postData, function(statusCode){

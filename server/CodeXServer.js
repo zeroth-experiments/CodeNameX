@@ -84,9 +84,69 @@ app.on("Auth", function(query, req, res) {
     }
 });
 
+
+
+// DB Coomunication
+var dbHostname = "127.0.0.1";
+var dbPort = 8888;
+
+var requestPacket = {
+    hostname : dbHostname,
+    port : dbPort,
+    path: '',
+    method: ''
+};
+
+function showall() {
+    console.log("/showall");
+    requestPacket.path = "/showall";
+    requestPacket.method = "GET";
+    var postData = "";
+    sendRequest(requestPacket, postData, function(statusCode){
+        if(statusCode == 200)
+            console.log("Test OK");
+        else
+            console.error("Test Fail!");
+    });
+}
+
+function add(db, data) {
+    console.log("/add");
+    requestPacket.path = "/add?dbname="+db;
+    requestPacket.method = "POST";
+    var postData = data;
+    sendRequest(requestPacket, postData, function(statusCode){
+        if(statusCode == 200)
+            console.log("Test OK");
+        else
+            console.error("Test Fail!");
+    });
+}
+
+function sendRequest(reqPack, res, callBack){
+    var client = http.request(reqPack, function(response){
+	response.data = "";
+	response.on("data", function(chunk){
+	    response.data += chunk;
+	});
+
+	response.on("end", function(){
+	    console.log("Test Response : \n\t" +response.data + " :: " + response.statusCode +"\n");
+            callBack(response.statusCode);
+	});
+    });
+
+    if(res != "" && reqPack['method'] == "POST") {
+	client.write(res);
+    }
+
+    client.end();
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 app.on("test", function(query, req, res){
     res.writeHead(200, {'Content-Type': 'text/plain' });
     res.end("You Have send : \n" + util.inspect(query) + "  \n data : " + req.data);
 });
+
 
