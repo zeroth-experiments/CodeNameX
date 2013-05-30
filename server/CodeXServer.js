@@ -61,19 +61,22 @@ app.on("Auth", function(query, req, res) {
             console.log("Appkey : " +  appreq.appkey);
             appkey = appreq.appkey;
         }
-        else {
-            // Generate appkey
-            appkey = uuid.v4();
-        }
         
         if(appreq.CLID) {
             console.log("CLID : " +  appreq.CLID);
             clid = appreq.CLID;
         }
-        else {
-            clid = uuid.v4();
+
+        if(!clid) {
+            // if DB has clid for this clientname 
+            // use it 
+            // else
+            // make a new one and assinged and store in DB
         }
-        
+        // then
+        // send CLID and challenge key to client
+        // incription decription ;)
+
         res.writeHead(200, {'Content-Type': 'text/plain' });
         res.end(data);
         // if the query is null
