@@ -1,0 +1,23 @@
+{
+  "name": "CodeNameX",
+  "version": "1.0.0",
+  "description": "SERVER Auth: (use the user key to get an application key for a particular session) 1) app checks whether there is an application key stored internally 2) if not ,  asks the user for username and password 3) App send username pass to server 4) if user pass is correct, serv send a random app key which is stored by the app key... 5) if user pass is wrong .. app destroyed any current app keys that the app has 6) if the app send the server and app key only then .. the sev checks it against the db .. if its valid then user is authenticaed 7)if its valid .. but a session time has been exceed .. the serv sends in a new application key",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zeroth/CodeNameX.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zeroth/CodeNameX/issues"
+  },
+  "homepage": "https://github.com/zeroth/CodeNameX#readme",
+  "dependencies": {
+    "node-uuid": "^1.4.8"
+  }
+}
